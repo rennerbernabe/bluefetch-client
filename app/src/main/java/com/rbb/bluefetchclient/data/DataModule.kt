@@ -11,6 +11,6 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindsAuthRepository(
-        dogImagesRepositoryImpl: AuthRepositoryImpl
+        authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
 }

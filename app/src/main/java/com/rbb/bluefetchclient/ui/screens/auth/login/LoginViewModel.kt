@@ -31,7 +31,7 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
         viewModelScope.launch {
             authRepository.login(Credentials("test1", "pass1")).collect { result ->
                 result.onSuccess {
-                    val token = it.token
+                    //TODO handle success
 
                 }.onFailure { exception ->
                     _error.value = exception.message
