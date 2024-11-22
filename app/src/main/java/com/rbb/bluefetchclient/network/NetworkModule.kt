@@ -26,9 +26,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit =
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(okHttpClient)
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .build()
 
@@ -39,9 +40,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(dataStore: DataStore<Preferences>): OkHttpClient {
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor(dataStore))
+            .addInterceptor(authInterceptor)
             .build()
     }
 

@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.rbb.bluefetchclient.data.AuthRepository
 import com.rbb.bluefetchclient.domain.Credentials
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +21,9 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
     private val _error = MutableStateFlow<String?>("")
     val error: StateFlow<String?> = _error
 
+    private val _navigateToHome = MutableSharedFlow<Unit>()
+    val navigateToHome: SharedFlow<Unit> = _navigateToHome
+
     fun onUsernameChange(newUsername: String) {
         _uiState.value = _uiState.value.copy(username = newUsername)
     }
@@ -31,10 +36,9 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
         viewModelScope.launch {
             authRepository.login(Credentials("test1", "pass1")).collect { result ->
                 result.onSuccess {
-                    //TODO handle success
-
+                    _navigateToHome.emit(Unit)
                 }.onFailure { exception ->
-                    _error.value = exception.message
+                    _error.emit(exception.message)
                 }
             }
         }

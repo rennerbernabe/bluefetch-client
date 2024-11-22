@@ -4,6 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,14 +24,29 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BlueFetchClientTheme(darkTheme = false) {
-
-                val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "login") {
-                    composable("login") { LoginScreen(navController) }
-                    composable("register") { RegisterScreen(navController) }
-                    composable("feeds") { HomeScreen() }
-                }
+                MainScreen()
             }
+        }
+    }
+}
+
+@Composable
+fun MainScreen() {
+    Scaffold { innerPadding ->
+        val navController = rememberNavController()
+        NavHost(
+            navController = navController,
+            startDestination = "login",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("login") {
+                LoginScreen(
+                    onNavigateToHome = { navController.navigate("home") },
+                    onNavigateToRegister = { navController.navigate("register") }
+                )
+            }
+            composable("register") { RegisterScreen(navController) }
+            composable("home") { HomeScreen() }
         }
     }
 }

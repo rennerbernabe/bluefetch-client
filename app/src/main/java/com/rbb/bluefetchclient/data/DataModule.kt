@@ -13,4 +13,9 @@ abstract class DataModule {
     internal abstract fun bindsAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    internal abstract fun bindsFeedRepository(
+        feedRepositoryImpl: FeedRepositoryImpl
+    ): FeedRepository
 }
