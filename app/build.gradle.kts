@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
@@ -59,8 +60,10 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
-    implementation(libs.retrofit)
+    // Retrofit
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
+    implementation(libs.retrofit)
     implementation(libs.retrofit.kotlin.serialization)
 
 
