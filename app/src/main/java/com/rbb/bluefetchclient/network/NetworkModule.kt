@@ -26,11 +26,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
+    fun provideRetrofit(lenientJson: Json,okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(lenientJson.asConverterFactory("application/json".toMediaType()))
             .build()
 
     @Singleton
@@ -52,5 +52,14 @@ object NetworkModule {
         return PreferenceDataStoreFactory.create(
             produceFile = { context.dataStoreFile("auth_prefs.preferences_pb") }
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideLenientJson(): Json {
+        return Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+        }
     }
 }

@@ -1,12 +1,12 @@
 package com.rbb.bluefetchclient.network
 
-import com.rbb.bluefetchclient.data.MixedTypeStringSerializer
+import com.rbb.bluefetchclient.data.CommentIdSerializer
 import com.rbb.bluefetchclient.domain.Comment
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class CommentResponse(
-    @Serializable(with = MixedTypeStringSerializer::class)
+    @Serializable(with = CommentIdSerializer::class)
     val id: String,
     val text: String,
     val timestamp: Long? = null,

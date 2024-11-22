@@ -8,7 +8,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-object MixedTypeStringSerializer : KSerializer<String> {
+object CommentIdSerializer : KSerializer<String> {
 
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("MixedTypeString", PrimitiveKind.STRING)

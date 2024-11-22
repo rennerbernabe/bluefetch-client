@@ -10,8 +10,7 @@ data class FeedResponse(
     val createdAt: String,
     val updatedAt: String,
     val username: String,
-    val user: UserResponse,
-    val comments: Map<String, CommentResponse>
+    val user: UserResponse
 )
 
 fun FeedResponse.toDomain() = Feed(
@@ -20,6 +19,5 @@ fun FeedResponse.toDomain() = Feed(
     createdAt = createdAt,
     updatedAt = updatedAt,
     username = username,
-    user = user.toDomain(),
-    comments = comments.values.map { it.toDomain() }
+    user = user.toDomain()
 )

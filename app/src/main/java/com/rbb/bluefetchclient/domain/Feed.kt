@@ -6,6 +6,5 @@ data class Feed(
     val createdAt: String,
     val updatedAt: String,
     val username: String,
-    val user: User,
-    val comments: List<Comment>
+    val user: User
 )
