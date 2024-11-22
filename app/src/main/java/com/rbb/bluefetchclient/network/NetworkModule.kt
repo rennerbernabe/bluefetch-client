@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://us-central1-bluefletch-learning-assignment.cloudfunctions.net/"
+    private const val BASE_URL = "https://us-central1-bluefletch-learning-assignment.cloudfunctions.net"
 
     @Provides
     @Singleton
