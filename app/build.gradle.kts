@@ -55,6 +55,9 @@ dependencies {
     implementation(libs.androidx.ui.text)
     implementation(libs.androidx.ui.tooling.preview)
 
+    // Coil
+    implementation(libs.coil)
+
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
