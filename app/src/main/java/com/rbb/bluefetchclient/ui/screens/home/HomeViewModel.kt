@@ -15,12 +15,19 @@ class HomeViewModel @Inject constructor(
     private val feedRepository: FeedRepository
 ) : ViewModel() {
 
-    val feed = MutableStateFlow<List<Feed>>(emptyList())
+    private val _feed = MutableStateFlow<List<Feed>>(emptyList())
+    val feed: StateFlow<List<Feed>> = _feed
+
     private val _loadingState = MutableStateFlow(false)
     val loadingState: StateFlow<Boolean> get() = _loadingState
 
+    private val _displayLimit = MutableStateFlow(25)
+    val displayLimit: StateFlow<Int> = _displayLimit
+
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> get() = _errorState
+
+    private var fullFeed: List<Feed> = emptyList()
 
     init {
         loadFeed()
@@ -30,13 +37,18 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _loadingState.emit(true)
             feedRepository.getFeed(limit).collect { result ->
-                result.onSuccess { domainFeed ->
-                    feed.emit(domainFeed)
+                result.onSuccess { feedItems ->
+                    fullFeed = feedItems
+                    _feed.emit(feedItems)
                 }.onFailure { exception ->
                     _errorState.emit(exception.message)
                 }
                 _loadingState.emit(false)
             }
         }
+    }
+
+    fun setPostLimit(limit: Int) {
+        _feed.value = fullFeed.take(limit)
     }
 }

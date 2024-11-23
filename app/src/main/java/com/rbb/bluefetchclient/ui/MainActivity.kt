@@ -32,21 +32,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
-    Scaffold { innerPadding ->
-        val navController = rememberNavController()
-        NavHost(
-            navController = navController,
-            startDestination = "login",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("login") {
-                LoginScreen(
-                    onNavigateToHome = { navController.navigate("home") },
-                    onNavigateToRegister = { navController.navigate("register") }
-                )
-            }
-            composable("register") { RegisterScreen(navController) }
-            composable("home") { HomeScreen() }
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = "login"
+    ) {
+        composable("login") {
+            LoginScreen(
+                onNavigateToHome = { navController.navigate("home") },
+                onNavigateToRegister = { navController.navigate("register") }
+            )
         }
+        composable("register") { RegisterScreen(navController) }
+        composable("home") { HomeScreen() }
     }
 }

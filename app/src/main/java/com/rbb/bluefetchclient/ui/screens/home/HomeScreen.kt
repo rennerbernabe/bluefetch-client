@@ -1,6 +1,7 @@
 package com.rbb.bluefetchclient.ui.screens.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,25 +16,42 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.rbb.bluefetchclient.R
 import com.rbb.bluefetchclient.domain.Feed
 import com.rbb.bluefetchclient.domain.User
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
@@ -41,18 +59,70 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val loading by viewModel.loadingState.collectAsState()
     val error by viewModel.errorState.collectAsState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (loading) {
-            CircularProgressIndicator()
-        } else if (error != null) {
-            Text(
-                text = error ?: "An unknown error occurred",
-                color = Color.Red,
-                modifier = Modifier.align(Alignment.Center),
-                textAlign = TextAlign.Center
+    var showPostFilterSheet by remember { mutableStateOf(false) }
+    val bottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = { true }
+    )
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(R.string.app_name)) },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            showPostFilterSheet = true
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.filter_list_24),
+                            contentDescription = "Limit posts"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                )
             )
-        } else {
-            FeedList(feed)
+        },
+        content = { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                if (loading) {
+                    CircularProgressIndicator()
+                } else if (error != null) {
+                    Text(
+                        text = error ?: "An unknown error occurred",
+                        color = Color.Red,
+                        modifier = Modifier.align(Alignment.Center),
+                        textAlign = TextAlign.Center
+                    )
+                } else {
+                    FeedList(feed)
+                }
+            }
+        }
+    )
+
+    if (showPostFilterSheet) {
+        ModalBottomSheet(
+            sheetState = bottomSheetState,
+            onDismissRequest = {
+                showPostFilterSheet = false
+            }
+        ) {
+            PostFilterSheet(
+                onLimitSelected = { limit ->
+                    showPostFilterSheet = false
+                    viewModel.setPostLimit(limit)
+                }
+            )
         }
     }
 }
@@ -94,16 +164,50 @@ fun FeedItem(
 
             Text(
                 text = feedItem.user.username,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                color = colorResource(R.color.blue_1)
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = feedItem.text,
             style = MaterialTheme.typography.bodyLarge
         )
+    }
+}
+
+@Composable
+fun PostFilterSheet(onLimitSelected: (Int) -> Unit) {
+    val limits = listOf(5, 10, 15, 20)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Select post limit",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        limits.forEach { limit ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onLimitSelected(limit)
+                    }
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "$limit posts",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        }
     }
 }
 
