@@ -8,11 +8,16 @@ import com.rbb.bluefetchclient.domain.Credentials
 import com.rbb.bluefetchclient.network.ApiService
 import com.rbb.bluefetchclient.network.CreateAccountRequest
 import com.rbb.bluefetchclient.network.CreateAccountResponse
+import com.rbb.bluefetchclient.network.ErrorResponse
+import com.rbb.bluefetchclient.network.ErrorResponseParser
 import com.rbb.bluefetchclient.network.LoginResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import retrofit2.HttpException
 import javax.inject.Inject
 
 interface AuthRepository {
@@ -34,6 +39,9 @@ class AuthRepositoryImpl @Inject constructor(
             val response = apiService.login(credentials)
             saveToken(response.token)
             emit(Result.success(response))
+        } catch (e: HttpException) {
+            val errorMessage = ErrorResponseParser.parseErrorResponse(e)
+            emit(Result.failure(Exception(errorMessage)))
         } catch (exception: Exception) {
             emit(Result.failure(exception))
         }
@@ -48,6 +56,9 @@ class AuthRepositoryImpl @Inject constructor(
             val response = apiService.createAccount(createAccountRequest)
             saveToken(response.token)
             emit(Result.success(response))
+        } catch (e: HttpException) {
+            val errorMessage = ErrorResponseParser.parseErrorResponse(e)
+            emit(Result.failure(Exception(errorMessage)))
         } catch (exception: Exception) {
             emit(Result.failure(exception))
         }
