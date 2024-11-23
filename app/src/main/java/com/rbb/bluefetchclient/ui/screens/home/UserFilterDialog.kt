@@ -43,7 +43,8 @@ fun UserFilterBottomSheet(onFilterSelected: (String?) -> Unit) {
             onValueChange = { username = it },
             label = { Text(stringResource(R.string.username)) },
             placeholder = { Text(stringResource(R.string.user_filter_placeholder)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
