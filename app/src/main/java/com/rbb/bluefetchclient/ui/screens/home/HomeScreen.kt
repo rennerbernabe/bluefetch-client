@@ -59,8 +59,14 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val loading by viewModel.loadingState.collectAsState()
     val error by viewModel.errorState.collectAsState()
 
-    var showPostFilterSheet by remember { mutableStateOf(false) }
-    val bottomSheetState = rememberModalBottomSheetState(
+    var showFeedLimitSheet by remember { mutableStateOf(false) }
+    val feedLimitSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = { true }
+    )
+
+    var showUserFilterDialog by remember { mutableStateOf(false) }
+    val userFilterSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { true }
     )
@@ -72,7 +78,18 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 actions = {
                     IconButton(
                         onClick = {
-                            showPostFilterSheet = true
+                            showUserFilterDialog = true
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_person_search_24),
+                            contentDescription = "Filter posts by user"
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            showFeedLimitSheet = true
                         }
                     ) {
                         Icon(
@@ -110,17 +127,33 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
         }
     )
 
-    if (showPostFilterSheet) {
+    if (showFeedLimitSheet) {
         ModalBottomSheet(
-            sheetState = bottomSheetState,
+            sheetState = feedLimitSheetState,
             onDismissRequest = {
-                showPostFilterSheet = false
+                showFeedLimitSheet = false
             }
         ) {
-            PostFilterSheet(
+            FeedLimitSheet(
                 onLimitSelected = { limit ->
-                    showPostFilterSheet = false
+                    showFeedLimitSheet = false
                     viewModel.setPostLimit(limit)
+                }
+            )
+        }
+    }
+
+    if (showUserFilterDialog) {
+        ModalBottomSheet(
+            sheetState = userFilterSheetState,
+            onDismissRequest = {
+                showUserFilterDialog = false
+            }
+        ) {
+            UserFilterBottomSheet(
+                onFilterSelected = { username ->
+                    showUserFilterDialog = false
+                    viewModel.filterFeedByUser(username)
                 }
             )
         }
@@ -179,7 +212,7 @@ fun FeedItem(
 }
 
 @Composable
-fun PostFilterSheet(onLimitSelected: (Int) -> Unit) {
+fun FeedLimitSheet(onLimitSelected: (Int) -> Unit) {
     val limits = listOf(5, 10, 15, 20)
 
     Column(

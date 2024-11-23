@@ -48,4 +48,12 @@ class HomeViewModel @Inject constructor(
     fun setPostLimit(limit: Int) {
         _feed.value = fullFeed.take(limit)
     }
+
+    fun filterFeedByUser(username: String?) {
+        _feed.value = if (username.isNullOrEmpty()) {
+            fullFeed
+        } else {
+            fullFeed.filter { it.user.username == username }
+        }
+    }
 }

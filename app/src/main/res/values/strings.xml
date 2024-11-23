@@ -7,4 +7,8 @@
     <string name="password">Password</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
+    <string name="filter">Filter</string>
+    <string name="show_all">Show all</string>
+    <string name="user_filter_placeholder">Enter username or leave blank for all</string>
+    <string name="filter_by_user">Filter by user</string>
 </resources>
