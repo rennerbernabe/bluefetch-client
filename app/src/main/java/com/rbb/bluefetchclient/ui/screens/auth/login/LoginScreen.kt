@@ -49,6 +49,14 @@ fun LoginScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
+        if (error != null) {
+            Text(
+                text = error ?: "An unknown error occurred",
+                color = Color.Red,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
+
         OutlinedTextField(
             value = state.username,
             onValueChange = viewModel::onUsernameChange,
