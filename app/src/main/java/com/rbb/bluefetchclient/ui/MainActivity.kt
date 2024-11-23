@@ -39,13 +39,21 @@ fun MainScreen() {
     ) {
         composable("login") {
             LoginScreen(
-                onNavigateToHome = { navController.navigate("home") },
+                onNavigateToHome = {
+                    navController.navigate("home") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
                 onNavigateToRegister = { navController.navigate("register") }
             )
         }
         composable("register") {
             RegisterScreen(
-                onNavigateToHome = { navController.navigate("home") },
+                onNavigateToHome = {
+                    navController.navigate("home") {
+                        popUpTo("register") { inclusive = true }
+                    }
+                },
                 onNavigateToLogin = { navController.navigate("login") }
             )
         }
