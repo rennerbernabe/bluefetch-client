@@ -21,8 +21,8 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
     private val _error = MutableStateFlow<String?>("")
     val error: StateFlow<String?> = _error
 
-    private val _navigateToHome = MutableSharedFlow<Unit>()
-    val navigateToHome: SharedFlow<Unit> = _navigateToHome
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     fun onUsernameChange(newUsername: String) {
         _uiState.value = _uiState.value.copy(username = newUsername)
@@ -32,14 +32,17 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
         _uiState.value = _uiState.value.copy(password = newPassword)
     }
 
-    fun onLoginClick() {
+    fun onLoginClick(onNavigateToHome: () -> Unit) {
+        _isLoading.value = true
+
         viewModelScope.launch {
             authRepository.login(Credentials("test1", "pass1")).collect { result ->
                 result.onSuccess {
-                    _navigateToHome.emit(Unit)
+                    onNavigateToHome()
                 }.onFailure { exception ->
                     _error.emit(exception.message)
                 }
+                _isLoading.value = false
             }
         }
     }

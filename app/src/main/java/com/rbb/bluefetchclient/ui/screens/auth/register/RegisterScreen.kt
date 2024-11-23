@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -21,16 +23,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.rbb.bluefetchclient.R
 
 @Composable
 fun RegisterScreen(
-    navController: NavHostController,
-    viewModel: RegisterViewModel = hiltViewModel()
+    viewModel: RegisterViewModel = hiltViewModel(),
+    onNavigateToHome: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
 
-    val state = viewModel.uiState.collectAsState().value
+    val state by viewModel.uiState.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
@@ -43,6 +47,14 @@ fun RegisterScreen(
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage ?: "",
+                color = Color.Red,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
 
         OutlinedTextField(
             value = state.firstName,
@@ -78,7 +90,7 @@ fun RegisterScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
-                onClick = { navController.navigate(route = "login") },
+                onClick = { onNavigateToLogin() },
                 colors = ButtonDefaults.buttonColors(
                     contentColor = colorResource(R.color.blue_1),
                     containerColor = Color.White
@@ -86,8 +98,18 @@ fun RegisterScreen(
             ) {
                 Text(text = stringResource(R.string.sign_in))
             }
-            Button(onClick = { viewModel.onRegisterClick() }) {
-                Text(text = stringResource(R.string.register))
+            Button(
+                onClick = { viewModel.onRegisterClick(onNavigateToHome) },
+                enabled = !isLoading
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(16.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(text = stringResource(R.string.sign_up))
+                }
             }
         }
     }

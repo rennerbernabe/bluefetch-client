@@ -6,13 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +36,7 @@ fun LoginScreen(
 
     val state by viewModel.uiState.collectAsState()
     val error by viewModel.error.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
@@ -75,15 +77,20 @@ fun LoginScreen(
             ) {
                 Text(text = stringResource(R.string.register))
             }
-            Button(onClick = { viewModel.onLoginClick() }) {
-                Text(text = stringResource(R.string.sign_in))
-            }
-        }
-    }
 
-    LaunchedEffect(Unit) {
-        viewModel.navigateToHome.collect {
-            onNavigateToHome()
+            Button(
+                onClick = { viewModel.onLoginClick(onNavigateToHome) },
+                enabled = !isLoading
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(16.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(text = stringResource(R.string.sign_in))
+                }
+            }
         }
     }
 }

@@ -11,6 +11,9 @@ interface ApiService {
     @POST("/account/login")
     suspend fun login(@Body credentials: Credentials): LoginResponse
 
+    @POST("/account/create")
+    suspend fun createAccount(@Body request: CreateAccountRequest): CreateAccountResponse
+
     @GET("/feed")
     suspend fun getFeed(@Query("limit") limit: Int): List<FeedResponse>
 }

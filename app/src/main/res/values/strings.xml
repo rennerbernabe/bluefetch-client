@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BlueFetch Client</string>
     <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
     <string name="register">Register</string>
     <string name="username">Username</string>
     <string name="password">Password</string>

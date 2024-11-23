@@ -21,9 +21,6 @@ class HomeViewModel @Inject constructor(
     private val _loadingState = MutableStateFlow(false)
     val loadingState: StateFlow<Boolean> get() = _loadingState
 
-    private val _displayLimit = MutableStateFlow(25)
-    val displayLimit: StateFlow<Int> = _displayLimit
-
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> get() = _errorState
 
