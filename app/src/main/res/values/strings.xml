@@ -12,5 +12,6 @@
     <string name="user_filter_placeholder">Enter username or leave blank for all</string>
     <string name="filter_by_user">Filter by user</string>
     <string name="welcome">Welcome!</string>
+    <string name="login_hint">Already have an account? Go back to login</string>
     <string name="register_hint">Don\'t have an account? Click here to register</string>
 </resources>

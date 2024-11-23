@@ -59,24 +59,19 @@ class RegisterViewModel @Inject constructor(
             _isLoading.value = true
             _errorMessage.value = null
 
-            try {
-                authRepository.createAccount(
-                    CreateAccountRequest(
-                        username = currentState.username,
-                        password = currentState.password,
-                        firstname = currentState.firstName,
-                        lastname = currentState.lastName,
-                    )
-                ).collect { result ->
-                    result.onSuccess {
-                        onNavigateToHome()
-                    }.onFailure { exception ->
-                        _errorMessage.value = "An error occurred: ${exception.localizedMessage}"
-                    }
+            authRepository.createAccount(
+                CreateAccountRequest(
+                    username = currentState.username,
+                    password = currentState.password,
+                    firstname = currentState.firstName,
+                    lastname = currentState.lastName,
+                )
+            ).collect { result ->
+                result.onSuccess {
+                    onNavigateToHome()
+                }.onFailure { exception ->
+                    _errorMessage.value = exception.message ?: "An unknown error occurred"
                 }
-            } catch (e: Exception) {
-                _errorMessage.value = "An unexpected error occurred: ${e.localizedMessage}"
-            } finally {
                 _isLoading.value = false
             }
         }

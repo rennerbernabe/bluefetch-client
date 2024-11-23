@@ -36,11 +36,11 @@ class HomeViewModel @Inject constructor(
             feedRepository.getFeed(limit).collect { result ->
                 result.onSuccess { feedItems ->
                     fullFeed = feedItems
-                    _feed.emit(feedItems)
+                    _feed.value = feedItems
                 }.onFailure { exception ->
-                    _errorState.emit(exception.message)
+                    _errorState.value = exception.message ?: "An unknown error occurred"
                 }
-                _loadingState.emit(false)
+                _loadingState.value = false
             }
         }
     }

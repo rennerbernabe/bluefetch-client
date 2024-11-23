@@ -56,7 +56,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 32.dp, bottom = 40.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
@@ -99,8 +99,7 @@ fun LoginScreen(
             )
 
             Box(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Column(
