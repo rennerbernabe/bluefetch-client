@@ -18,7 +18,7 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState
 
-    private val _error = MutableStateFlow<String?>("")
+    private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
     private val _isLoading = MutableStateFlow(false)
@@ -33,17 +33,36 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
     }
 
     fun onLoginClick(onNavigateToHome: () -> Unit) {
+        val username = _uiState.value.username.trim()
+        val password = _uiState.value.password.trim()
+
+        val validationError = validateInput(username, password)
+        if (validationError != null) {
+            _error.value = validationError
+            return
+        }
+
         _isLoading.value = true
+        _error.value = null
 
         viewModelScope.launch {
-            authRepository.login(Credentials("test1", "pass1")).collect { result ->
+            authRepository.login(Credentials(username, password)).collect { result ->
                 result.onSuccess {
                     onNavigateToHome()
                 }.onFailure { exception ->
-                    _error.emit(exception.message)
+                    _error.value = exception.message ?: "An unknown error occurred"
                 }
                 _isLoading.value = false
             }
+        }
+    }
+
+    private fun validateInput(username: String, password: String): String? {
+        return when {
+            username.isBlank() -> "Username is required."
+            password.isBlank() -> "Password is required."
+            password.length < 5 -> "Password must be at least 5 characters long."
+            else -> null
         }
     }
 }

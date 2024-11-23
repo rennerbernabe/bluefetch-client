@@ -93,7 +93,7 @@ class RegisterViewModel @Inject constructor(
             lastName.isBlank() -> "Last name is required."
             username.isBlank() -> "Username is required."
             password.isBlank() -> "Password is required."
-            password.length < 5 -> "Password must be at least 6 characters long."
+            password.length < 5 -> "Password must be at least 5 characters long."
             else -> null
         }
     }
