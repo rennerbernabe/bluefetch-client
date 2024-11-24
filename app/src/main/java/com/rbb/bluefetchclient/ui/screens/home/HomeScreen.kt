@@ -252,7 +252,6 @@ fun FeedItemPreview() {
         id = "-O8LWNW6lSPrfk00t_kB",
         text = "winter",
         updatedAt = "Fri, 04 Oct 2024 07:54:04 GMT",
-        username = "stepcurr",
         user = User(
             username = "stepcurr",
             firstName = "Step",

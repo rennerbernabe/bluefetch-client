@@ -9,7 +9,6 @@ data class FeedResponse(
     val text: String,
     val createdAt: String,
     val updatedAt: String,
-    val username: String,
     val user: UserResponse
 )
 
@@ -18,6 +17,5 @@ fun FeedResponse.toDomain() = Feed(
     text = text,
     createdAt = createdAt,
     updatedAt = updatedAt,
-    username = username,
     user = user.toDomain()
 )
