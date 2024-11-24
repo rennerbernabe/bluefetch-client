@@ -112,7 +112,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                     .padding(padding)
             ) {
                 if (loading) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 } else if (error != null) {
                     Text(
                         text = error ?: "An unknown error occurred",
