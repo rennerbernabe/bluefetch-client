@@ -8,7 +8,6 @@ data class Feed(
     val text: String,
     val createdAt: String,
     val updatedAt: String,
-    val username: String,
     val user: User
 )
 
